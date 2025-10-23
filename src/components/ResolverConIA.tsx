@@ -26,7 +26,8 @@ const ResolverConIA = () => {
     setLoading(true);
     setResultado(null);
 
-    const prompt = `Eres un experto en combinatoria y matemáticas discretas. Analiza el siguiente problema y resuélvelo paso a paso:
+    const prompt = `Eres un experto en combinatoria y matemáticas discretas. Analiza el siguiente 
+    problema y resuélvelo paso a paso:
 
 ${problema}
 
@@ -35,7 +36,8 @@ Por favor:
 2. Explica qué fórmula se debe usar y por qué
 3. Realiza los cálculos paso a paso
 4. Presenta la respuesta final de manera clara
-5. Muestra todos los ejemplos de las combinaciones,  No importa la cantidad de resultados que haya muestralos todos no importa que sean excesivos, MUESTRA UNA PARTE DE UNOS 20 resultados
+5. Muestra todos los ejemplos de las combinaciones,  No importa la cantidad de resultados que haya 
+muestralos todos no importa que sean excesivos, MUESTRA UNA PARTE DE UNOS 20 resultados
 
 
 Responde de manera clara, educativa y detallada.`;

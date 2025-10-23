@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Calculator, Brain, Shuffle, Layers } from 'lucide-react';
 import ResolverConIA from './components/ResolverConIA';
 import PermutacionComponent from './components/PermutacionComponent';
