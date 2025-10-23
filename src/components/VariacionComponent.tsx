@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, Info, AlertCircle, Zap } from 'lucide-react';
+import { Layers, Info, Zap } from 'lucide-react';
 
 interface Resultado {
   n: number;
@@ -47,8 +47,8 @@ const VariacionComponent: React.FC = () => {
       return;
     }
 
-    if (kNum > 10) {
-      alert('Por favor, usa k ≤ 10 para evitar cálculos muy grandes');
+    if (kNum > 12) {
+      alert('Por favor, usa k ≤ 12 para evitar bloquear el navegador');
       return;
     }
 
@@ -64,7 +64,7 @@ const VariacionComponent: React.FC = () => {
     }
 
     const totalVariaciones = Math.pow(nNum, kNum);
-    const variaciones = totalVariaciones <= 10000 ? generarVariaciones(elementosArray, kNum) : [];
+    const variaciones = generarVariaciones(elementosArray, kNum);
 
     setResultado({
       n: nNum,
@@ -72,7 +72,7 @@ const VariacionComponent: React.FC = () => {
       elementos: elementosArray.join(', '),
       total: totalVariaciones,
       variaciones: variaciones,
-      mostrarLista: totalVariaciones <= 10000
+      mostrarLista: true
     });
   };
 
@@ -149,7 +149,6 @@ const VariacionComponent: React.FC = () => {
             </div>
           )}
 
-          {/* Ejemplos rápidos */}
           <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200">
             <h3 className="font-semibold text-blue-700 mb-3 flex items-center gap-2">
               <Zap className="w-5 h-5" />
@@ -204,7 +203,7 @@ const VariacionComponent: React.FC = () => {
                   value={k}
                   onChange={(e) => setK(e.target.value)}
                   min="1"
-                  max="10"
+                  max="12"
                   placeholder="Ej: 2"
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-lg"
                 />
@@ -274,57 +273,18 @@ const VariacionComponent: React.FC = () => {
                 </p>
               </div>
 
-              {resultado.mostrarLista ? (
-                <div className="bg-gray-50 p-5 rounded-xl border-2 border-gray-200">
-                  <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                    📋 Todas las variaciones ({resultado.variaciones.length}):
-                  </h3>
-                  <div className="max-h-96 overflow-y-auto space-y-2 pr-2">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                      {resultado.variaciones.map((variacion, index) => (
-                        <div 
-                          key={index} 
-                          className="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow font-mono text-gray-700 text-center"
-                        >
-                          <span className="text-blue-600 font-semibold text-xs block mb-1">
-                            #{index + 1}
-                          </span>
-                          <span className="text-lg tracking-wider font-bold">
-                            {variacion.join('')}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-yellow-50 p-5 rounded-xl border-l-4 border-yellow-500">
-                  <h3 className="font-semibold text-yellow-700 mb-2 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
-                    Advertencia
-                  </h3>
-                  <p className="text-yellow-700 text-sm mb-2">
-                    El número de variaciones ({resultado.total.toLocaleString()}) es muy grande para mostrarse completamente.
-                  </p>
-                  <p className="text-yellow-600 text-xs">
-                    💡 Se muestran todas las variaciones solo cuando son 10,000 o menos.
-                  </p>
-                </div>
-              )}
-
-              {/* Ejemplos si no se muestran todas */}
-              {!resultado.mostrarLista && resultado.total <= 100000 && (
-                <div className="bg-cyan-50 p-5 rounded-xl border-2 border-cyan-200">
-                  <h3 className="font-semibold text-cyan-700 mb-3">
-                    🔍 Primeras 12 variaciones de ejemplo:
-                  </h3>
+              <div className="bg-gray-50 p-5 rounded-xl border-2 border-gray-200">
+                <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  📋 Todas las variaciones ({resultado.variaciones.length}):
+                </h3>
+                <div className="max-h-96 overflow-y-auto space-y-2 pr-2">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                    {generarVariaciones(resultado.elementos.split(', '), resultado.k).slice(0, 12).map((variacion, index) => (
+                    {resultado.variaciones.map((variacion, index) => (
                       <div 
                         key={index} 
-                        className="bg-white p-3 rounded-lg shadow-sm font-mono text-gray-700 text-center"
+                        className="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow font-mono text-gray-700 text-center"
                       >
-                        <span className="text-cyan-600 font-semibold text-xs block mb-1">
+                        <span className="text-blue-600 font-semibold text-xs block mb-1">
                           #{index + 1}
                         </span>
                         <span className="text-lg tracking-wider font-bold">
@@ -333,16 +293,12 @@ const VariacionComponent: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-cyan-600 mt-3 text-center">
-                    ... y {resultado.total - 12} variaciones más
-                  </p>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Información adicional */}
         <div className="mt-6 text-center text-white text-sm opacity-90 space-y-1">
           <p>📚 <strong>Diferencia clave:</strong> En variaciones CON repetición se puede usar el mismo elemento varias veces</p>
           <p>🎲 Ejemplo: Lanzar 2 dados = 6² = 36 resultados posibles</p>

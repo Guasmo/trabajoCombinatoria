@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shuffle, Info, AlertCircle } from 'lucide-react';
+import { Shuffle, Info } from 'lucide-react';
 
 interface Resultado {
   valor: string;
@@ -46,22 +46,22 @@ const PermutacionComponent: React.FC = () => {
       alert('Por favor, ingresa un texto o número');
       return;
     }
-    if (input.length > 8) {
-      alert('Por favor, ingresa máximo 8 caracteres para evitar cálculos excesivos');
+    if (input.length > 10) {
+      alert('Por favor, ingresa máximo 10 caracteres para evitar bloquear el navegador');
       return;
     }
 
     const caracteres = input.split('');
     const n = caracteres.length;
     const totalPermutaciones = factorial(n);
-    const permutaciones = totalPermutaciones <= 5000 ? permutarArray(caracteres) : [];
+    const permutaciones = permutarArray(caracteres);
 
     setResultado({
       valor: input,
       n: n,
       total: totalPermutaciones,
       permutaciones: permutaciones,
-      mostrarLista: totalPermutaciones <= 5000
+      mostrarLista: true
     });
   };
 
@@ -113,14 +113,14 @@ const PermutacionComponent: React.FC = () => {
 
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-2">
-              Ingresa texto o número (máximo 8 caracteres):
+              Ingresa texto o número (máximo 10 caracteres):
             </label>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && generarPermutaciones()}
-              maxLength={8}
+              maxLength={10}
               placeholder="Ej: ABC, 123, HOLA"
               className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-lg"
             />
@@ -171,76 +171,35 @@ const PermutacionComponent: React.FC = () => {
                   {resultado.n === 6 && "Hay 720 formas de ordenar 6 elementos"}
                   {resultado.n === 7 && "Hay 5,040 formas de ordenar 7 elementos"}
                   {resultado.n === 8 && "Hay 40,320 formas de ordenar 8 elementos"}
+                  {resultado.n === 9 && "Hay 362,880 formas de ordenar 9 elementos"}
+                  {resultado.n === 10 && "Hay 3,628,800 formas de ordenar 10 elementos"}
                 </p>
               </div>
 
-              {resultado.mostrarLista ? (
-                <div className="bg-gray-50 p-5 rounded-xl border-2 border-gray-200">
-                  <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                    📋 Todas las permutaciones ({resultado.permutaciones.length}):
-                  </h3>
-                  <div className="max-h-96 overflow-y-auto space-y-2 pr-2">
-                    {resultado.permutaciones.map((perm, index) => (
-                      <div 
-                        key={index} 
-                        className="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow font-mono text-gray-700 flex items-center gap-3"
-                      >
-                        <span className="text-purple-600 font-semibold min-w-[3rem]">
-                          {index + 1}.
-                        </span>
-                        <span className="text-lg tracking-wider">
-                          {perm.join('')}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="bg-gray-50 p-5 rounded-xl border-2 border-gray-200">
+                <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  📋 Todas las permutaciones ({resultado.permutaciones.length}):
+                </h3>
+                <div className="max-h-96 overflow-y-auto space-y-2 pr-2">
+                  {resultado.permutaciones.map((perm, index) => (
+                    <div 
+                      key={index} 
+                      className="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow font-mono text-gray-700 flex items-center gap-3"
+                    >
+                      <span className="text-purple-600 font-semibold min-w-[3rem]">
+                        {index + 1}.
+                      </span>
+                      <span className="text-lg tracking-wider">
+                        {perm.join('')}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <div className="bg-yellow-50 p-5 rounded-xl border-l-4 border-yellow-500">
-                  <h3 className="font-semibold text-yellow-700 mb-2 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
-                    Advertencia
-                  </h3>
-                  <p className="text-yellow-700 text-sm mb-2">
-                    El número de permutaciones ({resultado.total.toLocaleString()}) es muy grande para mostrarse completamente.
-                  </p>
-                  <p className="text-yellow-600 text-xs">
-                    💡 Se muestran todas las permutaciones solo cuando son 5,000 o menos.
-                  </p>
-                </div>
-              )}
-
-              {/* Ejemplos de las primeras permutaciones si no se muestran todas */}
-              {!resultado.mostrarLista && resultado.n <= 8 && (
-                <div className="bg-blue-50 p-5 rounded-xl border-2 border-blue-200">
-                  <h3 className="font-semibold text-blue-700 mb-3">
-                    🔍 Primeras 6 permutaciones de ejemplo:
-                  </h3>
-                  <div className="space-y-2">
-                    {permutarArray(resultado.valor.split('')).slice(0, 6).map((perm, index) => (
-                      <div 
-                        key={index} 
-                        className="bg-white p-3 rounded-lg shadow-sm font-mono text-gray-700 flex items-center gap-3"
-                      >
-                        <span className="text-blue-600 font-semibold min-w-[3rem]">
-                          {index + 1}.
-                        </span>
-                        <span className="text-lg tracking-wider">
-                          {perm.join('')}
-                        </span>
-                      </div>
-                    ))}
-                    <p className="text-xs text-blue-600 mt-3">
-                      ... y {resultado.total - 6} permutaciones más
-                    </p>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Información adicional */}
         <div className="mt-6 text-center text-white text-sm opacity-90">
           <p>📚 <strong>Factorial:</strong> 5! = 5 × 4 × 3 × 2 × 1 = 120</p>
         </div>
